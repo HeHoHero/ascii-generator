@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Image files
+*.png
+*.jpg
+
+# Clion
+cmake-build-debug
+.idea
