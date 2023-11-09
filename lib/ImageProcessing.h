@@ -1,22 +1,9 @@
 #ifndef ASCII_GENERATOR_IMAGEPROCESSING_H
 #define ASCII_GENERATOR_IMAGEPROCESSING_H
 
-#include <iostream>
-#include <algorithm>
-#include <fstream>
-#include <string>
-
-#include <curl/curl.h>
-
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <stb_image_write.h>
-
 size_t WriteCallBack(void* contents, size_t size, size_t nmemb, FILE* file) {
     return fwrite(contents, size, nmemb, file);
 }
-
 void PullImage() {
     // init cURL
     CURL* curl = curl_easy_init();
@@ -34,7 +21,7 @@ void PullImage() {
     const char* url = userUrl.c_str();
 
     // Set up file
-    const char* filename = "image.png";
+    const char* filename = "outputImages/image.png";
     FILE* imageFile = fopen(filename, "wb");
     if (!imageFile) {
         std::cerr << "Failed to open file for writing" << std::endl;
@@ -63,17 +50,17 @@ void PullImage() {
 
 void UpImageContrast(const float contrast, const int brightness) {
     // Load the source image
-    const char* sourcePath = "image.png";
+    const char* sourcePath = "outputImages/image.png";
     int width, height, channels;
     unsigned char* sourceData = stbi_load(sourcePath, &width, &height, &channels, 0);
 
     if (!sourceData) {
-        std::cerr << "Error loading source image." << std::endl;
+        std::cerr << "Failed to open image for contrast/brightness editing" << std::endl;
         return;
     }
 
     // Convert image to 3D array [y][x][r, g, b, a]
-    unsigned char*** imageArray = new unsigned char**[height];
+    auto*** imageArray = new unsigned char**[height];
     for (int y = 0; y < height; y++) {
         imageArray[y] = new unsigned char*[width];
         for (int x = 0; x < width; x++) {
@@ -96,7 +83,7 @@ void UpImageContrast(const float contrast, const int brightness) {
     }
 
     // Convert 3D array back into image
-    unsigned char* destinationData = new unsigned char[width * height * channels];
+    auto* destinationData = new unsigned char[width * height * channels];
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             for (int c = 0; c < channels; c++) {
@@ -106,7 +93,7 @@ void UpImageContrast(const float contrast, const int brightness) {
     }
 
     // Save image data to png
-    const char* destPath = "imageOut.png";
+    const char* destPath = "outputImages/imageContrastOut.png";
     stbi_write_png(destPath, width, height, channels, destinationData, width * channels);
 
     // Clean up
@@ -120,6 +107,38 @@ void UpImageContrast(const float contrast, const int brightness) {
         delete[] imageArray[y];
     }
     delete[] imageArray;
+}
+
+void GrayScaleImage(const char* imagePath) {
+    int width, height, channels;
+    unsigned char *image_data = stbi_load(imagePath, &width, &height, &channels, 0);
+
+    if (!image_data) {
+        std::cout << "Failed to open image for gray scale" << std::endl;
+        return;
+    }
+
+    // Step 2: Convert the image to grayscale
+    // Assuming the original image has 3 or 4 channels (RGB or RGBA)
+    int grayscale_channels = 1;  // Grayscale has only one channel
+
+    unsigned char *grayscale_data = new unsigned char[width * height * grayscale_channels];
+
+    for (int i = 0; i < width * height; ++i) {
+        // Use a simple luminosity formula to convert to grayscale
+        grayscale_data[i] = static_cast<unsigned char>(
+                0.2126 * image_data[i * channels] +
+                0.7152 * image_data[i * channels + 1] +
+                0.0722 * image_data[i * channels + 2]
+        );
+    }
+
+    // Save image data to png
+    stbi_write_jpg("outputImages/imageOutGrayScale.jpg", width, height, grayscale_channels, grayscale_data, 100);
+
+    // Clean up memory
+    stbi_image_free(image_data);
+    delete[] grayscale_data;
 }
 
 #endif //ASCII_GENERATOR_IMAGEPROCESSING_H

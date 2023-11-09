@@ -1,5 +1,7 @@
 #include <iostream>
+#include "lib/include.h"
 #include "lib/ImageProcessing.h"
+#include "lib/dithering.h"
 
 int main() {
     PullImage();
@@ -13,17 +15,25 @@ int main() {
         float contrast;
         int brightness;
 
-        std::cout << "Insert contrast (0, 1): " << std::endl;
+        std::cout << "Insert contrast: " << std::endl;
         std::cin >> contrast;
-        std::cout << "Insert brightness (>=0, <=255): " << std::endl;
+        std::cout << "Insert brightness: " << std::endl;
         std::cin >> brightness;
 
         UpImageContrast(contrast, brightness);
 
         std::cout << "Image has been saved with added contrast and brightness" << std::endl;
+
+        GrayScaleImage("outputImages/imageContrastOut.png");
     } else {
-        std::cout << "oki" << std::endl;
+        GrayScaleImage("outputImages/image.png");
     }
+
+    std::cout << "Image has been saved with gray scale" << std::endl;
+
+    std::cout << "Stating dithering" << std::endl;
+    FSDithering(16);
+    std::cout << "Finished dithering" << std::endl;
 
     return 0;
 }
