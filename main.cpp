@@ -2,8 +2,11 @@
 #include "lib/include.h"
 #include "lib/ImageProcessing.h"
 #include "lib/dithering.h"
+#include "lib/asciiGeneration.h"
 
 int main() {
+    char tokens[] = " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+
     PullImage();
     std::cout << "Image was saved successfully" << std::endl << std::endl;
 
@@ -22,18 +25,32 @@ int main() {
 
         UpImageContrast(contrast, brightness);
 
-        std::cout << "Image has been saved with added contrast and brightness" << std::endl;
+        std::cout << "Image has been saved with added contrast and brightness" << std::endl << std::endl;
 
-        GrayScaleImage("outputImages/imageContrastOut.png");
+        GrayScaleImage("outputImages/imageOutContrast.png");
     } else {
         GrayScaleImage("outputImages/image.png");
     }
 
-    std::cout << "Image has been saved with gray scale" << std::endl;
+    std::string finalImagePath = "outputImages/imageOutGrayScale.jpg";
 
-    std::cout << "Stating dithering" << std::endl;
-    FSDithering(16);
-    std::cout << "Finished dithering" << std::endl;
+    std::cout << "Image has been saved with gray scale" << std::endl << std::endl;
+
+    std::cout << "Add dithering (y, n): " << std::endl;
+    std::cin >> input;
+
+    if (input == 'y') {
+        int threshold = 128;
+
+        std::cout << "Enter threshold: " << std::endl;
+        std::cin >> threshold;
+
+        FSDithering(sizeof(tokens) / sizeof(tokens[0]), threshold);
+
+        finalImagePath = "outputImages/imageOutDithered.jpg";
+    }
+
+    WriteImageToTxt(finalImagePath.c_str(), tokens);
 
     return 0;
 }

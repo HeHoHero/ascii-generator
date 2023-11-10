@@ -9,7 +9,8 @@ find_package(Stb REQUIRED)
 add_executable(ascii_generator main.cpp
         lib/ImageProcessing.h
         lib/dithering.h
-        lib/include.h)
+        lib/include.h
+        lib/asciiGeneration.h)
 
 target_link_libraries(ascii_generator PRIVATE CURL::libcurl)
 target_include_directories(ascii_generator PRIVATE ${Stb_INCLUDE_DIR})

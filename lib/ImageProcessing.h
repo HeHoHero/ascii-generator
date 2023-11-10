@@ -93,7 +93,7 @@ void UpImageContrast(const float contrast, const int brightness) {
     }
 
     // Save image data to png
-    const char* destPath = "outputImages/imageContrastOut.png";
+    const char* destPath = "outputImages/imageOutContrast.png";
     stbi_write_png(destPath, width, height, channels, destinationData, width * channels);
 
     // Clean up
@@ -118,14 +118,14 @@ void GrayScaleImage(const char* imagePath) {
         return;
     }
 
-    // Step 2: Convert the image to grayscale
-    // Assuming the original image has 3 or 4 channels (RGB or RGBA)
-    int grayscale_channels = 1;  // Grayscale has only one channel
+    // Original image has 3 to 4 channels
+    // While gray scale only has one
+    int grayscale_channels = 1;
 
-    unsigned char *grayscale_data = new unsigned char[width * height * grayscale_channels];
+    auto *grayscale_data = new unsigned char[width * height * grayscale_channels];
 
     for (int i = 0; i < width * height; ++i) {
-        // Use a simple luminosity formula to convert to grayscale
+        // Convert to grayscale
         grayscale_data[i] = static_cast<unsigned char>(
                 0.2126 * image_data[i * channels] +
                 0.7152 * image_data[i * channels + 1] +
