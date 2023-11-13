@@ -23,15 +23,15 @@ int ClosestPaletteColor(int pixelValue, int tokenAmount) {
 }
 
 // Floyd-Steinberg dithering
-void FSDithering(int tokenAmount, int threshold) {
+int FSDithering(const char* path, int tokenAmount, int threshold) {
+
     // Load the source image
-    const char* path = "outputImages/imageOutGrayScale.jpg";
     int width, height, channels;
     unsigned char* image = stbi_load(path, &width, &height, &channels, 0);
 
     if (!image) {
         std::cerr << "Failed to open image for dithering" << std::endl;
-        return;
+        return 1;
     }
 
     // Convert to grayscale
@@ -83,6 +83,8 @@ void FSDithering(int tokenAmount, int threshold) {
     // Clean up
     stbi_image_free(image);
     delete[] grayscaleImage;
+
+    return 0;
 }
 
 #endif //ASCII_GENERATOR_DITHERING_H
