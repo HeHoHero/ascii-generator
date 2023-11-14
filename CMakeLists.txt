@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(CURL REQUIRED)
 find_package(Stb REQUIRED)
 
-# Define the executable and its source files
+# Define exe and source files for image editing
 add_executable(ImagePull cpp/ImagePull.cpp)
 add_executable(EditContrast cpp/EditContrast.cpp)
 add_executable(GrayScale cpp/GrayScale.cpp)
@@ -15,7 +15,7 @@ add_executable(AsciiGeneration cpp/AsciiGeneration.cpp)
 add_executable(DitherImage cpp/DitherImage.cpp
         lib/dithering.h)
 
-# Link the executable with required libraries
+#Link exe with libs
 target_link_libraries(ImagePull PRIVATE CURL::libcurl)
 target_include_directories(ImagePull PRIVATE ${Stb_INCLUDE_DIR})
 

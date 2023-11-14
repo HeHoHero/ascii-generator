@@ -29,3 +29,7 @@
 # Clion
 cmake-build-debug
 .idea
+
+# Don't ignore
+!libcurl-d.dll
+!zlibd1.dll
